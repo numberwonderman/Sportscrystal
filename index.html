@@ -5,18 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sports Crystal | Statistical Probability</title>
     
-    <!-- PWA Manifest and Theme -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#121212">
-    
     <link rel="stylesheet" href="style.css">
     
-    <!-- Three.js via CDN -->
     <script type="importmap">
         {
             "imports": {
-                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
             }
         }
     </script>
@@ -25,66 +21,61 @@
 
     <header>
         <h1>Sports Crystal</h1>
-        <p>Scrying the future of the game through statistics.</p>
     </header>
 
     <main id="app">
-        <!-- Three.js Canvas Container -->
-        <div id="canvas-container"></div>
+        <div id="canvas-container" style="width: 100%; height: 400px;"></div>
 
         <section id="input-area">
-            <h2>Enter Team Statistics</h2>
-            
-            <div class="team-input visiting-team">
-                <h3>Visiting Team (Red)</h3>
-                <label for="visiting-rating">Elo Rating:</label>
-                <input type="number" id="visiting-rating" placeholder="e.g., 1500">
-            </div>
-
-            <div class="team-input home-team">
-                <h3>Home Team (Blue)</h3>
-                <label for="home-rating">Elo Rating:</label>
-                <input type="number" id="home-rating" placeholder="e.g., 1500">
-            </div>
-
+            <input type="number" id="visiting-rating" placeholder="Visiting Elo">
+            <input type="number" id="home-rating" placeholder="Home Elo">
             <button id="predict-btn">Generate Prediction</button>
-        </section>
-
-        <section id="output-area">
-            <div id="result-display">
-                <!-- Prediction results will appear here -->
-            </div>
         </section>
     </main>
 
-    <footer>
-        <p>Built with Math and Three.js | Educational Purposes Only</p>
-    </footer>
+    <script type="module">
+        import * as THREE from 'three';
 
-    <script type="module" src="script.js"></script>
-</body>
-</html>
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        container.appendChild(renderer.domElement);
 
-            <div class="team-input home-team">
-                <h3>Home Team (Blue)</h3>
-                <label for="home-rating">Elo Rating:</label>
-                <input type="number" id="home-rating" placeholder="e.g., 1500">
-            </div>
+        const geometry = new THREE.IcosahedronGeometry(1);
+        const material = new THREE.MeshStandardMaterial({ color: 0xaaaaaa, wireframe: true });
+        const crystal = new THREE.Mesh(geometry, material);
+        scene.add(crystal);
 
-            <button id="predict-btn">Generate Prediction</button>
-        </section>
+        const light = new THREE.PointLight(0xffffff, 1);
+        light.position.set(5, 5, 5);
+        scene.add(light, new THREE.AmbientLight(0x404040));
+        camera.position.z = 3;
 
-        <section id="output-area">
-            <div id="result-display">
-                <!-- Prediction results will appear here -->
-            </div>
-        </section>
-    </main>
+        function calculateWinProbability(ratingA, ratingB) {
+            return 1 / (1 + Math.pow(10, (ratingB - ratingA) / 400));
+        }
 
-    <footer>
-        <p>Built with Math and Three.js | Educational Purposes Only</p>
-    </footer>
+        document.getElementById('predict-btn').addEventListener('click', () => {
+            const ratingV = parseFloat(document.getElementById('visiting-rating').value);
+            const ratingH = parseFloat(document.getElementById('home-rating').value);
+            if (isNaN(ratingV) || isNaN(ratingH)) return;
 
-    <script type="module" src="script.js"></script>
+            const probV = calculateWinProbability(ratingV, ratingH);
+            const confidence = Math.abs(probV - 0.5) * 2;
+            crystal.material.color.set(probV > 0.5 ? 0xff4d4d : 0x4d79ff);
+            crystal.scale.set(1 + confidence, 1 + confidence, 1 + confidence);
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+            crystal.rotation.x += 0.01;
+            crystal.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        }
+        animate();
+    </script>
 </body>
 </html>
