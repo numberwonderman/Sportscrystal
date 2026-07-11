@@ -10,19 +10,24 @@ The Crystal acts as a real-time data visualization engine, combining rigorous ma
 * **True 3D Rendering:** Powered by [Three.js](https://threejs.org/), ensuring a high-performance, non-flattening 3D geometry that remains stable regardless of the prediction.
 
 ## 📜 Project History
-The "Sports Crystal" began as an experiment in aesthetic data visualization, drawing inspiration from the **long history of scrying**—the practice of gazing into a reflective object to seek insight. We wanted our project to modernize this practice, using sports data as the "influence" and the 3D cube as the reflective surface.
+The "Sports Crystal" was developed entirely within the **United Hacks V7 hackathon window**. 
 
-We transitioned to a **cube** for its structural integrity and geometric clarity; while spheres are traditional, the cube represents the **stability and groundedness** of calculated data. This version of the project represents our final pivot to a WebGL-based architecture using Three.js, resolving previous CSS-based rendering limitations. You may find similar conceptual prototypes in this repository; they serve as a record of the technical trial-and-error process that led to this final engine.
+The project began as an exploratory experiment in aesthetic data visualization, drawing inspiration from the ancient practice of **scrying**—the art of seeking insight by gazing into a reflective medium. During the early hours of the hackathon, we focused on rapid prototyping, using CSS 3D transforms to bring the "Crystal" to life. As we iterated, we encountered technical limitations with depth-flattening that threatened the visual stability of our core concept. 
+
+Rather than abandoning the vision, we committed to an aggressive pivot midway through the competition, migrating to a robust, WebGL-based architecture using **Three.js**. This transition allowed us to resolve rendering issues and achieve the persistent, true-3D rotation we initially envisioned. The prototypes visible in this repository serve as a record of our intensive, real-time iterative process throughout the hackathon—demonstrating our technical trial-and-error and our commitment to building a high-performance engine under pressure.
+
+## 🔮 The Art of Scrying & The Cubic Form
+The concept of the "Sports Crystal" draws inspiration from the ancient practice of scrying. While traditional scrying often utilizes spheres, the **Sports Crystal** utilizes a cubic geometry. This choice is intentional: in crystal lore, the cube represents **stability, groundedness, and the structure of data.** By using a cubic form, our visualization aims to stabilize the chaotic nature of sports predictions, grounding the "visions" of the engine in firm, calculated mathematical reality.
 
 ## 📈 Prediction Logic
-The core prediction logic utilizes an Elo-based ranking system. The probability of the home team ($P_H$) winning is calculated as follows:
+The core prediction logic utilizes an Elo-based ranking system. The probability of the home team ($P_{H}$) winning is calculated as follows:
 
 $$P_{H} = \frac{1}{1 + 10^{\frac{R_{A} - R_{H}}{400}}}$$
 
 *Where $R_{H}$ and $R_{A}$ are the Elo ratings of the Home and Away teams.*
 
 ## ⚠️ Ethical Disclaimer
-This project is for educational and entertainment purposes only. The "Sports Crystal" uses historical Elo ratings to calculate probabilities based on statistical trends; it does not account for real-world variables such as player injuries or weather conditions. This tool should not be used to influence gambling or financial decisions.
+This project is for educational and entertainment purposes only. The "Sports Crystal" uses historical Elo ratings to calculate probabilities based on statistical trends; it does not account for real-world variables such as player injuries or weather conditions. This tool should not be used to influence gambling or betting activities.
 
 ## 🛠 Tech Stack
 * **Frontend:** HTML5, CSS3 (Responsive Design)
