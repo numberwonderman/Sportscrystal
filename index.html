@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sports Crystal | Three.js 3D Predictor</title>
+    <title>Sports Crystal | 3D Engine</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         body { font-family: sans-serif; background: #0f172a; color: #f8fafc; display: flex; flex-direction: column; align-items: center; padding: 2rem; }
@@ -25,12 +25,12 @@
     <input type="number" id="rating-home" placeholder="Home Team Elo">
     <input type="number" id="rating-away" placeholder="Away Team Elo">
     <button onclick="predict()">Consult the Crystal</button>
-    <div id="result" class="result">Awaiting input...</div>
+    <div id="result" class="result">Waiting for input...</div>
     <div id="stats" class="stats"></div>
 </div>
 
 <script>
-    // 1. Setup Three.js Scene
+    // Setup Three.js Scene
     const container = document.getElementById('crystal-container');
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
@@ -38,21 +38,21 @@
     renderer.setSize(300, 300);
     container.appendChild(renderer.domElement);
 
-    // 2. Create Cube
+    // Create Cube (Initially White)
     const geometry = new THREE.BoxGeometry(2, 2, 2);
-    const material = new THREE.MeshPhongMaterial({ color: 0x3b82f6, shininess: 100 });
+    const material = new THREE.MeshPhongMaterial({ color: 0xffffff, shininess: 100 });
     const cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
 
-    // 3. Lighting
+    // Lighting
     const light = new THREE.DirectionalLight(0xffffff, 1);
     light.position.set(1, 1, 2);
     scene.add(light);
     scene.add(new THREE.AmbientLight(0x404040));
     camera.position.z = 5;
 
-    // 4. Animation Loop
-    let speed = 0.02;
+    // Animation variables
+    let speed = 0.01;
     let direction = 1;
 
     function animate() {
@@ -62,7 +62,6 @@
     }
     animate();
 
-    // 5. Predict Logic
     function predict() {
         const h = parseFloat(document.getElementById('rating-home').value);
         const a = parseFloat(document.getElementById('rating-away').value);
@@ -72,7 +71,7 @@
         const isHome = probHome > 0.5;
         const confidence = isHome ? probHome : (1 - probHome);
         
-        // Update cube properties
+        // Update cube state
         cube.material.color.set(isHome ? 0x3b82f6 : 0xef4444);
         direction = isHome ? 1 : -1;
         speed = 0.01 + (confidence * 0.05); 
