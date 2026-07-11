@@ -3,65 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sports Crystal | 3D Predictor</title>
+    <title>Sports Crystal | Diamond Predictor</title>
     <style>
         body { font-family: sans-serif; background: #0f172a; color: #f8fafc; display: flex; flex-direction: column; align-items: center; padding: 2rem; }
         .card { background: #1e293b; padding: 1.5rem; border-radius: 1rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); width: 100%; max-width: 400px; margin-bottom: 2rem; }
         input { width: 100%; padding: 0.75rem; margin: 0.5rem 0; border-radius: 0.5rem; border: 2px solid transparent; background: #334155; color: white; }
-        .home-input { border-color: #3b82f6; }
-        .away-input { border-color: #ef4444; }
         button { width: 100%; padding: 0.75rem; background: #10b981; border: none; border-radius: 0.5rem; color: white; font-weight: bold; cursor: pointer; }
-        button:hover { background: #059669; }
         
-        .crystal-container { perspective: 1000px; margin: 4rem 0; display: flex; justify-content: center; }
+        /* The Diamond Crystal */
+        .crystal-container { margin: 4rem 0; }
         .crystal {
-            width: 100px; height: 100px;
-            position: relative;
-            transform-style: preserve-3d;
+            width: 120px; height: 120px;
+            background: #3b82f6;
+            transform: rotate(45deg);
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
             transition: all 0.5s ease;
-            /* Force tilt and local perspective */
-            transform: rotateX(-20deg) rotateY(30deg) !important;
-            perspective: 1000px;
-            filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.5));
+            display: flex; align-items: center; justify-content: center;
         }
-        .face {
-            position: absolute; width: 100px; height: 100px;
-            backface-visibility: visible;
-            border: 1px solid rgba(255,255,255,0.2);
-            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.3) 100%);
-        }
-        
-        .front { transform: translateZ(50px); }
-        .back { transform: rotateY(180deg) translateZ(50px); }
-        .right { transform: rotateY(90deg) translateZ(50px); }
-        .left { transform: rotateY(-90deg) translateZ(50px); }
-        .top { transform: rotateX(90deg) translateZ(50px); }
-        .bottom { transform: rotateX(-90deg) translateZ(50px); }
 
-        @keyframes spinClockwise { from { transform: rotateX(-20deg) rotateY(30deg); } to { transform: rotateX(-20deg) rotateY(390deg); } }
-        @keyframes spinCounter { from { transform: rotateX(-20deg) rotateY(30deg); } to { transform: rotateX(-20deg) rotateY(-330deg); } }
-        @keyframes tumble { 0% { transform: rotateX(-20deg) rotateY(30deg); } 50% { transform: rotateX(160deg) rotateY(210deg) rotateZ(45deg); } 100% { transform: rotateX(340deg) rotateY(390deg); } }
+        @keyframes pulse { 0%, 100% { transform: rotate(45deg) scale(1); } 50% { transform: rotate(45deg) scale(1.1); } }
+        @keyframes spin { from { transform: rotate(45deg); } to { transform: rotate(405deg); } }
         
-        .result { margin-top: 1rem; text-align: center; font-weight: bold; font-size: 1.2rem; }
+        .result { margin-top: 2rem; text-align: center; font-weight: bold; font-size: 1.4rem; }
         .stats { margin-top: 0.5rem; font-size: 0.9rem; color: #94a3b8; text-align: center; }
     </style>
 </head>
 <body>
 
 <div class="crystal-container">
-    <div id="crystal" class="crystal">
-        <div class="face front"></div><div class="face back"></div>
-        <div class="face right"></div><div class="face left"></div>
-        <div class="face top"></div><div class="face bottom"></div>
-    </div>
+    <div id="crystal" class="crystal"></div>
 </div>
 
 <div class="card">
     <h2>Sports Crystal</h2>
-    <input type="number" id="rating-home" class="home-input" placeholder="Home Team Elo">
-    <input type="number" id="rating-away" class="away-input" placeholder="Away Team Elo">
+    <input type="number" id="rating-home" placeholder="Home Team Elo">
+    <input type="number" id="rating-away" placeholder="Away Team Elo">
     <button onclick="predict()">Consult the Crystal</button>
-    <div id="result" class="result">Enter ratings to predict.</div>
+    <div id="result" class="result">Awaiting input...</div>
     <div id="stats" class="stats"></div>
 </div>
 
@@ -70,32 +49,23 @@
         const h = parseFloat(document.getElementById('rating-home').value);
         const a = parseFloat(document.getElementById('rating-away').value);
         const crystal = document.getElementById('crystal');
-        const faces = document.querySelectorAll('.face');
         const resDiv = document.getElementById('result');
         const statsDiv = document.getElementById('stats');
         
         if (isNaN(h) || isNaN(a)) return;
 
         const probHome = 1 / (1 + Math.pow(10, (a - h) / 400));
-        const isTie = Math.abs(probHome - 0.5) < 0.05;
+        const color = probHome > 0.5 ? '#3b82f6' : '#ef4444';
         
-        crystal.style.animation = 'none';
-        void crystal.offsetWidth;
+        crystal.style.background = color;
+        crystal.style.boxShadow = `0 0 30px ${color}80`;
+        crystal.style.animation = 'spin 1s ease-out';
         
-        const color = isTie ? '#a855f7' : (probHome > 0.5 ? '#3b82f6' : '#ef4444');
-        faces.forEach(f => f.style.background = color + 'CC');
-        
-        if (isTie) {
-            crystal.style.animation = 'tumble 2s infinite linear';
-            resDiv.innerHTML = "Too Close to Call!";
-        } else {
-            const isHome = probHome > 0.5;
-            const probability = isHome ? probHome : (1 - probHome);
-            const duration = 3.5 - (probability * 3);
-            crystal.style.animation = `${isHome ? 'spinClockwise' : 'spinCounter'} ${duration}s infinite linear`;
-            resDiv.innerHTML = `${isHome ? "Home" : "Away"} Favored`;
-        }
-        statsDiv.innerHTML = `Home: ${(probHome * 100).toFixed(1)}% | Away: ${((1 - probHome) * 100).toFixed(1)}%`;
+        setTimeout(() => {
+            crystal.style.animation = 'pulse 2s infinite ease-in-out';
+            resDiv.innerHTML = probHome > 0.5 ? "Home Favored" : "Away Favored";
+            statsDiv.innerHTML = `Win Probability: ${(probHome > 0.5 ? probHome : 1 - probHome).toFixed(1)}%`;
+        }, 1000);
     }
 </script>
 </body>
