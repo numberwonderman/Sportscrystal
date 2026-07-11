@@ -4,7 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sports Crystal | Statistical Probability</title>
+    
+    <!-- PWA Manifest and Theme -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#121212">
+    
     <link rel="stylesheet" href="style.css">
+    
     <!-- Three.js via CDN -->
     <script type="importmap">
         {
@@ -34,6 +40,30 @@
                 <label for="visiting-rating">Elo Rating:</label>
                 <input type="number" id="visiting-rating" placeholder="e.g., 1500">
             </div>
+
+            <div class="team-input home-team">
+                <h3>Home Team (Blue)</h3>
+                <label for="home-rating">Elo Rating:</label>
+                <input type="number" id="home-rating" placeholder="e.g., 1500">
+            </div>
+
+            <button id="predict-btn">Generate Prediction</button>
+        </section>
+
+        <section id="output-area">
+            <div id="result-display">
+                <!-- Prediction results will appear here -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Built with Math and Three.js | Educational Purposes Only</p>
+    </footer>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
 
             <div class="team-input home-team">
                 <h3>Home Team (Blue)</h3>
