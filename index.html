@@ -20,11 +20,14 @@
             position: relative;
             transform-style: preserve-3d;
             transition: all 0.5s ease;
+            /* Tilt to reveal depth */
+            transform: rotateX(-20deg) rotateY(30deg);
         }
         .face {
             position: absolute; width: 100px; height: 100px;
-            border: 2px solid rgba(255,255,255,0.2);
-            background: rgba(100, 116, 139, 0.8);
+            border: 1px solid rgba(255,255,255,0.4);
+            /* Gradient for light/shadow depth */
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.2) 100%);
             transition: background 0.5s ease;
         }
         /* Positioning cube faces */
@@ -35,9 +38,9 @@
         .top { transform: rotateX(90deg) translateZ(50px); }
         .bottom { transform: rotateX(-90deg) translateZ(50px); }
 
-        @keyframes spinClockwise { from { transform: rotateY(0deg) rotateX(0deg); } to { transform: rotateY(360deg) rotateX(360deg); } }
-        @keyframes spinCounter { from { transform: rotateY(360deg) rotateX(360deg); } to { transform: rotateY(0deg) rotateX(0deg); } }
-        @keyframes tumble { 0% { transform: rotateX(0deg); } 50% { transform: rotateX(180deg) rotateZ(45deg); } 100% { transform: rotateX(360deg) rotateZ(0deg); } }
+        @keyframes spinClockwise { from { transform: rotateX(-20deg) rotateY(30deg); } to { transform: rotateX(-20deg) rotateY(390deg); } }
+        @keyframes spinCounter { from { transform: rotateX(-20deg) rotateY(30deg); } to { transform: rotateX(-20deg) rotateY(-330deg); } }
+        @keyframes tumble { 0% { transform: rotateX(0deg) rotateY(0deg); } 50% { transform: rotateX(180deg) rotateZ(45deg); } 100% { transform: rotateX(360deg) rotateY(0deg); } }
         
         .result { margin-top: 1rem; text-align: center; font-weight: bold; font-size: 1.2rem; }
         .stats { margin-top: 0.5rem; font-size: 0.9rem; color: #94a3b8; text-align: center; }
@@ -77,7 +80,7 @@
         const isTie = Math.abs(probHome - 0.5) < 0.05;
         
         crystal.style.animation = 'none';
-        void crystal.offsetWidth; // Force reflow
+        void crystal.offsetWidth;
         
         const color = isTie ? '#a855f7' : (probHome > 0.5 ? '#3b82f6' : '#ef4444');
         faces.forEach(f => f.style.background = color);
