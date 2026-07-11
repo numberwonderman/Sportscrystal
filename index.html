@@ -68,15 +68,24 @@
         if (isNaN(h) || isNaN(a)) return;
 
         const probHome = 1 / (1 + Math.pow(10, (a - h) / 400));
+        
+        // Define Tie as within 1% of 0.5
+        const isTie = Math.abs(probHome - 0.5) < 0.01;
         const isHome = probHome > 0.5;
-        const confidence = isHome ? probHome : (1 - probHome);
+        const confidence = isTie ? 0.5 : (isHome ? probHome : (1 - probHome));
         
         // Update cube state
-        cube.material.color.set(isHome ? 0x3b82f6 : 0xef4444);
-        direction = isHome ? 1 : -1;
-        speed = 0.01 + (confidence * 0.05); 
+        if (isTie) {
+            cube.material.color.set(0xa855f7); // Purple for tie
+            direction = 0; // Stop rotation for a tie
+            document.getElementById('result').innerHTML = "It's a Toss-up!";
+        } else {
+            cube.material.color.set(isHome ? 0x3b82f6 : 0xef4444);
+            direction = isHome ? 1 : -1;
+            document.getElementById('result').innerHTML = isHome ? "Home Favored" : "Away Favored";
+        }
         
-        document.getElementById('result').innerHTML = isHome ? "Home Favored" : "Away Favored";
+        speed = 0.01 + (confidence * 0.05); 
         document.getElementById('stats').innerHTML = `Win Probability: ${(confidence * 100).toFixed(1)}%`;
     }
 </script>
