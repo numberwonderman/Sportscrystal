@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sports Crystal | Y-Axis Spin</title>
+    <title>Sports Crystal | Persistent Spin</title>
     <style>
         body { font-family: sans-serif; background: #0f172a; color: #f8fafc; display: flex; flex-direction: column; align-items: center; padding: 2rem; }
         .card { background: #1e293b; padding: 1.5rem; border-radius: 1rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); width: 100%; max-width: 400px; margin-bottom: 2rem; }
         input { width: 100%; padding: 0.75rem; margin: 0.5rem 0; border-radius: 0.5rem; border: 2px solid transparent; background: #334155; color: white; }
         button { width: 100%; padding: 0.75rem; background: #10b981; border: none; border-radius: 0.5rem; color: white; font-weight: bold; cursor: pointer; }
         
-        /* Container forces 3D space */
         .crystal-container { margin: 4rem 0; perspective: 600px; }
         .crystal {
             width: 120px; height: 120px;
             background: #3b82f6;
             border-radius: 20px;
-            /* Y-Axis visual setup */
-            transform-style: preserve-3d;
+            /* Initial tilt so it's not perfectly flat */
+            transform: rotateY(20deg); 
             box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
         }
 
+        /* Persistent Y-Axis animations */
         @keyframes spinYClockwise { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
         @keyframes spinYCounter { from { transform: rotateY(0deg); } to { transform: rotateY(-360deg); } }
         
@@ -57,21 +57,21 @@
         const isHome = probHome > 0.5;
         const confidence = isHome ? probHome : (1 - probHome);
         
-        // Speed logic: duration in seconds
+        // Speed logic: 50% = 2.5s, 100% = 0.5s
         const duration = 2.5 - (confidence * 2); 
 
+        // Reset animation
         crystal.style.animation = 'none';
         void crystal.offsetWidth;
         
+        // Apply new style and infinite spin
         crystal.style.background = isHome ? '#3b82f6' : '#ef4444';
         const animName = isHome ? 'spinYClockwise' : 'spinYCounter';
-        crystal.style.animation = `${animName} ${duration}s ease-out forwards`;
+        crystal.style.animation = `${animName} ${duration}s linear infinite`;
         
-        setTimeout(() => {
-            resDiv.innerHTML = isHome ? "Home Favored" : "Away Favored";
-            // Corrected percentage math
-            statsDiv.innerHTML = `Win Probability: ${(confidence * 100).toFixed(1)}%`;
-        }, duration * 1000);
+        // Update stats immediately
+        resDiv.innerHTML = isHome ? "Home Favored" : "Away Favored";
+        statsDiv.innerHTML = `Win Probability: ${(confidence * 100).toFixed(1)}%`;
     }
 </script>
 </body>
