@@ -78,6 +78,7 @@
         const isTie = Math.abs(probHome - 0.5) < 0.05;
         
         crystal.style.animation = 'none';
+        crystal.style.transform = 'rotateX(-20deg) rotateY(30deg)'; // Maintain 3D tilt
         void crystal.offsetWidth;
         
         const color = isTie ? '#a855f7' : (probHome > 0.5 ? '#3b82f6' : '#ef4444');
