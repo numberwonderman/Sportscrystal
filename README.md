@@ -1,28 +1,30 @@
-# Sports Crystal
-Sports Crystal is a client-side statistical probability engine that combines rigorous mathematical modeling with immersive 3D visualization.
-## Features
- * **Pure Client-Side Logic:** Performs statistical predictions locally without relying on external APIs or server-side dependencies.
- * **3D Reactive Visualization:** Features a dynamic, CSS-driven cubic "Crystal" that rotates, changes color, and modifies its animation speed based on the win probability of a matchup.
- * **Performance Focused:** Engineered for speed and reliability, ensuring a clean experience with no network-based failures.
-## Project History
-The Sports Crystal was developed as a clean-room implementation during the [Competition Name]. It evolved from an earlier investigative prototype focused on Elo-based probability modeling. The Sports Crystal represents the finalized, optimized, and visually integrated version of that exploration, designed specifically to meet the high performance and design standards of this hackathon.
-## The Art of Scrying & The Cubic Form
-The concept of the "Sports Crystal" draws inspiration from the ancient practice of **scrying**—the art of seeking insight or "seeing" future events by gazing into a reflective medium to reveal hidden patterns.
-### A Note on Geometry
-While traditional scrying often utilizes spheres to facilitate an unfocused gaze, the **Sports Crystal** utilizes a cubic geometry. This choice is intentional: in crystal lore, the cube represents **stability, groundedness, and the structure of data.** By using a cubic form, our visualization aims to stabilize the chaotic nature of sports predictions, grounding the "visions" of the engine in firm, calculated mathematical reality.
-## Mathematical Model
-The core prediction logic utilizes an Elo-based ranking system. The probability of the home team winning (P_H) is calculated as follows:
-Where R_H and R_A are the Elo ratings of the Home and Away teams, respectively.
-## Ethics and Disclaimer
-This tool is designed strictly for statistical education and entertainment purposes and is not intended for gambling or betting activities.
-You are all set! I am standing by—paste your index.html whenever you are ready, and I will help you review it or suggest any final adjustments before you deploy.
-# Sports Crystal
-Sports Crystal is a client-side statistical probability engine that combines rigorous mathematical modeling with immersive 3D visualization.
-## Features
- * **Pure Client-Side Logic:** Performs statistical predictions without relying on external APIs or server-side dependencies.
- * **Three.js Visualization:** Renders a dynamic, interactive 3D crystal where geometry and animation correspond to prediction confidence.
- * **Progressive Web App Capable:** Can be cached for offline use and installed as a dedicated local utility.
-## Mathematical Model
-The core prediction logic utilizes an Elo-based ranking system to calculate the probability of victory between two competitors based on their historical ratings.
-## Ethics and Disclaimer
-This tool is designed strictly for statistical education and entertainment purposes and is not intended for gambling or betting activities.
+# Sports Crystal: 3D Elo Predictor
+### Built for United Hacks V7
+
+A stylized, interactive 3D sports outcome predictor. Using Elo rating differentials, the Sports Crystal dynamically visualizes match win probabilities through a 3D persistent-spin engine.
+
+## 🚀 How it Works
+The Crystal acts as a real-time data visualization engine, combining rigorous mathematical modeling with immersive 3D rendering.
+* **Color-Coded Analysis:** The crystal shifts color based on the favored team (Blue for Home, Red for Away, Purple for an even Toss-up).
+* **Dynamic Velocity:** The rotation speed of the 3D cube is proportional to the confidence of the prediction—the more lopsided the matchup, the faster the crystal spins.
+* **True 3D Rendering:** Powered by [Three.js](https://threejs.org/), ensuring a high-performance, non-flattening 3D geometry that remains stable regardless of the prediction.
+
+## 📜 Project History
+The "Sports Crystal" began as an experiment in aesthetic data visualization, drawing inspiration from the **long history of scrying**—the practice of gazing into a reflective object to seek insight. We wanted our project to modernize this practice, using sports data as the "influence" and the 3D cube as the reflective surface.
+
+We transitioned to a **cube** for its structural integrity and geometric clarity; while spheres are traditional, the cube represents the **stability and groundedness** of calculated data. This version of the project represents our final pivot to a WebGL-based architecture using Three.js, resolving previous CSS-based rendering limitations. You may find similar conceptual prototypes in this repository; they serve as a record of the technical trial-and-error process that led to this final engine.
+
+## 📈 Prediction Logic
+The core prediction logic utilizes an Elo-based ranking system. The probability of the home team ($P_H$) winning is calculated as follows:
+
+$$P_{H} = \frac{1}{1 + 10^{\frac{R_{A} - R_{H}}{400}}}$$
+
+*Where $R_{H}$ and $R_{A}$ are the Elo ratings of the Home and Away teams.*
+
+## ⚠️ Ethical Disclaimer
+This project is for educational and entertainment purposes only. The "Sports Crystal" uses historical Elo ratings to calculate probabilities based on statistical trends; it does not account for real-world variables such as player injuries or weather conditions. This tool should not be used to influence gambling or financial decisions.
+
+## 🛠 Tech Stack
+* **Frontend:** HTML5, CSS3 (Responsive Design)
+* **3D Engine:** [Three.js](https://threejs.org/) (WebGL rendering)
+* **Performance:** Pure client-side logic; offline-capable via caching.
