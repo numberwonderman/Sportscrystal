@@ -3,27 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sports Crystal | Diamond Predictor</title>
+    <title>Sports Crystal | Dynamic Predictor</title>
     <style>
         body { font-family: sans-serif; background: #0f172a; color: #f8fafc; display: flex; flex-direction: column; align-items: center; padding: 2rem; }
         .card { background: #1e293b; padding: 1.5rem; border-radius: 1rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); width: 100%; max-width: 400px; margin-bottom: 2rem; }
         input { width: 100%; padding: 0.75rem; margin: 0.5rem 0; border-radius: 0.5rem; border: 2px solid transparent; background: #334155; color: white; }
         button { width: 100%; padding: 0.75rem; background: #10b981; border: none; border-radius: 0.5rem; color: white; font-weight: bold; cursor: pointer; }
         
-        /* The Diamond Crystal */
-        .crystal-container { margin: 4rem 0; }
+        .crystal-container { margin: 4rem 0; perspective: 500px; }
         .crystal {
             width: 120px; height: 120px;
             background: #3b82f6;
-            transform: rotate(45deg);
-            border-radius: 15px;
+            border-radius: 20px;
+            transform: rotateX(20deg) rotateY(30deg);
             box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
-            transition: all 0.5s ease;
-            display: flex; align-items: center; justify-content: center;
+            transition: background 0.5s ease;
         }
 
-        @keyframes pulse { 0%, 100% { transform: rotate(45deg) scale(1); } 50% { transform: rotate(45deg) scale(1.1); } }
-        @keyframes spin { from { transform: rotate(45deg); } to { transform: rotate(405deg); } }
+        @keyframes rotateClockwise { 
+            from { transform: rotateX(20deg) rotateY(30deg); } 
+            to { transform: rotateX(20deg) rotateY(390deg); } 
+        }
+        @keyframes rotateCounter { 
+            from { transform: rotateX(20deg) rotateY(30deg); } 
+            to { transform: rotateX(20deg) rotateY(-330deg); } 
+        }
         
         .result { margin-top: 2rem; text-align: center; font-weight: bold; font-size: 1.4rem; }
         .stats { margin-top: 0.5rem; font-size: 0.9rem; color: #94a3b8; text-align: center; }
@@ -55,17 +59,23 @@
         if (isNaN(h) || isNaN(a)) return;
 
         const probHome = 1 / (1 + Math.pow(10, (a - h) / 400));
-        const color = probHome > 0.5 ? '#3b82f6' : '#ef4444';
+        const isHome = probHome > 0.5;
+        const confidence = isHome ? probHome : (1 - probHome);
         
-        crystal.style.background = color;
-        crystal.style.boxShadow = `0 0 30px ${color}80`;
-        crystal.style.animation = 'spin 1s ease-out';
+        // Speed logic: higher confidence = faster spin
+        const duration = 2.5 - (confidence * 2); 
+
+        crystal.style.animation = 'none';
+        void crystal.offsetWidth;
+        
+        crystal.style.background = isHome ? '#3b82f6' : '#ef4444';
+        const animName = isHome ? 'rotateClockwise' : 'rotateCounter';
+        crystal.style.animation = `${animName} ${duration}s ease-out forwards`;
         
         setTimeout(() => {
-            crystal.style.animation = 'pulse 2s infinite ease-in-out';
-            resDiv.innerHTML = probHome > 0.5 ? "Home Favored" : "Away Favored";
-            statsDiv.innerHTML = `Win Probability: ${(probHome > 0.5 ? probHome : 1 - probHome).toFixed(1)}%`;
-        }, 1000);
+            resDiv.innerHTML = isHome ? "Home Favored" : "Away Favored";
+            statsDiv.innerHTML = `Win Probability: ${(confidence * 100).toFixed(1)}%`;
+        }, duration * 1000);
     }
 </script>
 </body>
