@@ -3,79 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sports Crystal | Statistical Probability</title>
-    
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#121212">
-    <link rel="stylesheet" href="style.css">
-    
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
-            }
+    <title>Sports Crystal | Predictor</title>
+    <style>
+        body { font-family: sans-serif; background: #0f172a; color: #f8fafc; display: flex; flex-direction: column; align-items: center; padding: 2rem; }
+        .card { background: #1e293b; padding: 1.5rem; border-radius: 1rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); width: 100%; max-width: 400px; margin-bottom: 2rem; }
+        input { width: 100%; padding: 0.75rem; margin: 0.5rem 0; border-radius: 0.5rem; border: 2px solid transparent; background: #334155; color: white; }
+        .home-input { border-color: #3b82f6; }
+        .away-input { border-color: #ef4444; }
+        button { width: 100%; padding: 0.75rem; background: #10b981; border: none; border-radius: 0.5rem; color: white; font-weight: bold; cursor: pointer; }
+        
+        .crystal-container { perspective: 1000px; margin-bottom: 2rem; }
+        .crystal {
+            width: 120px; height: 120px; background: #64748b;
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            transition: all 0.5s ease;
         }
-    </script>
+        
+        @keyframes spinClockwise { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+        @keyframes spinCounter { from { transform: rotateY(360deg); } to { transform: rotateY(0deg); } }
+        @keyframes tumble { 
+            0% { transform: rotateX(0deg) rotateZ(0deg); } 
+            50% { transform: rotateX(180deg) rotateZ(45deg); }
+            100% { transform: rotateX(360deg) rotateZ(0deg); } 
+        }
+        
+        .result { margin-top: 1rem; text-align: center; font-weight: bold; font-size: 1.2rem; }
+    </style>
 </head>
 <body>
 
-    <header>
-        <h1>Sports Crystal</h1>
-    </header>
+<div class="crystal-container">
+    <div id="crystal" class="crystal"></div>
+</div>
 
-    <main id="app">
-        <div id="canvas-container" style="width: 100%; height: 400px;"></div>
+<div class="card">
+    <h2>Sports Crystal</h2>
+    <input type="number" id="rating-home" class="home-input" placeholder="Home Team Elo">
+    <input type="number" id="rating-away" class="away-input" placeholder="Away Team Elo">
+    <button onclick="predict()">Consult the Crystal</button>
+    <div id="result" class="result">Enter ratings to predict.</div>
+</div>
 
-        <section id="input-area">
-            <input type="number" id="visiting-rating" placeholder="Visiting Elo">
-            <input type="number" id="home-rating" placeholder="Home Elo">
-            <button id="predict-btn">Generate Prediction</button>
-        </section>
-    </main>
-
-    <script type="module">
-        import * as THREE from 'three';
-
-        const container = document.getElementById('canvas-container');
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
+<script>
+    function predict() {
+        const h = parseFloat(document.getElementById('rating-home').value);
+        const a = parseFloat(document.getElementById('rating-away').value);
+        const crystal = document.getElementById('crystal');
+        const resDiv = document.getElementById('result');
         
-        renderer.setSize(container.clientWidth, container.clientHeight);
-        container.appendChild(renderer.domElement);
+        if (isNaN(h) || isNaN(a)) return;
 
-        const geometry = new THREE.IcosahedronGeometry(1);
-        const material = new THREE.MeshStandardMaterial({ color: 0xaaaaaa, wireframe: true });
-        const crystal = new THREE.Mesh(geometry, material);
-        scene.add(crystal);
-
-        const light = new THREE.PointLight(0xffffff, 1);
-        light.position.set(5, 5, 5);
-        scene.add(light, new THREE.AmbientLight(0x404040));
-        camera.position.z = 3;
-
-        function calculateWinProbability(ratingA, ratingB) {
-            return 1 / (1 + Math.pow(10, (ratingB - ratingA) / 400));
+        const probHome = 1 / (1 + Math.pow(10, (a - h) / 400));
+        
+        // Logic for Tie/Tumble
+        const isTie = Math.abs(probHome - 0.5) < 0.05;
+        
+        crystal.style.animation = 'none';
+        void crystal.offsetWidth; // Force reflow
+        
+        if (isTie) {
+            crystal.style.background = '#a855f7'; // Purple for neutral/tumble
+            crystal.style.animation = 'tumble 2s infinite linear';
+            resDiv.innerHTML = "Too Close to Call!";
+        } else {
+            const isHome = probHome > 0.5;
+            const probability = isHome ? probHome : (1 - probHome);
+            const duration = 3.5 - (probability * 3);
+            
+            crystal.style.background = isHome ? '#3b82f6' : '#ef4444';
+            crystal.style.animation = `${isHome ? 'spinClockwise' : 'spinCounter'} ${duration}s infinite linear`;
+            resDiv.innerHTML = `${isHome ? "Home" : "Away"} Favored (${(probability * 100).toFixed(1)}%)`;
         }
-
-        document.getElementById('predict-btn').addEventListener('click', () => {
-            const ratingV = parseFloat(document.getElementById('visiting-rating').value);
-            const ratingH = parseFloat(document.getElementById('home-rating').value);
-            if (isNaN(ratingV) || isNaN(ratingH)) return;
-
-            const probV = calculateWinProbability(ratingV, ratingH);
-            const confidence = Math.abs(probV - 0.5) * 2;
-            crystal.material.color.set(probV > 0.5 ? 0xff4d4d : 0x4d79ff);
-            crystal.scale.set(1 + confidence, 1 + confidence, 1 + confidence);
-        });
-
-        function animate() {
-            requestAnimationFrame(animate);
-            crystal.rotation.x += 0.01;
-            crystal.rotation.y += 0.01;
-            renderer.render(scene, camera);
-        }
-        animate();
-    </script>
+    }
+</script>
 </body>
 </html>
