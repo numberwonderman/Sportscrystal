@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports Crystal | Statistical Probability</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Three.js via CDN -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+
+    <header>
+        <h1>Sports Crystal</h1>
+        <p>Scrying the future of the game through statistics.</p>
+    </header>
+
+    <main id="app">
+        <!-- Three.js Canvas Container -->
+        <div id="canvas-container"></div>
+
+        <section id="input-area">
+            <h2>Enter Team Statistics</h2>
+            
+            <div class="team-input visiting-team">
+                <h3>Visiting Team (Red)</h3>
+                <label for="visiting-rating">Elo Rating:</label>
+                <input type="number" id="visiting-rating" placeholder="e.g., 1500">
+            </div>
+
+            <div class="team-input home-team">
+                <h3>Home Team (Blue)</h3>
+                <label for="home-rating">Elo Rating:</label>
+                <input type="number" id="home-rating" placeholder="e.g., 1500">
+            </div>
+
+            <button id="predict-btn">Generate Prediction</button>
+        </section>
+
+        <section id="output-area">
+            <div id="result-display">
+                <!-- Prediction results will appear here -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Built with Math and Three.js | Educational Purposes Only</p>
+    </footer>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
